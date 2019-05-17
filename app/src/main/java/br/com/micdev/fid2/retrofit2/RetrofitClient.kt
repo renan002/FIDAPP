@@ -9,7 +9,7 @@ class RetrofitClient {
 
         private var retrofit: Retrofit? = null
 
-        private var teste = "s"
+        private var teste = null
 
         fun getClient(baseUrl: String): Retrofit? {
             if (retrofit == null) {
