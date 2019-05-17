@@ -9,6 +9,8 @@ class RetrofitClient {
 
         private var retrofit: Retrofit? = null
 
+        private var teste = "s"
+
         fun getClient(baseUrl: String): Retrofit? {
             if (retrofit == null) {
                 retrofit = Retrofit.Builder()
