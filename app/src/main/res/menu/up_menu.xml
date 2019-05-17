@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/upMenu_perfil"
+          android:icon="@drawable/face_profile"
+          android:title="@string/perfilMenu"/>
+
+    <item android:id="@+id/upMenu_addEvento"
+          android:icon="@drawable/plus"
+          android:title="@string/addEvento"/>
+
+    <item android:id="@+id/upMenu_configs"
+          android:icon="@drawable/settings"
+          android:title="@string/configMenu"/>
+
+    <item android:id="@+id/upMenu_sair"
+          android:icon="@drawable/logout"
+          android:title="@string/deslogarMenu"/>
+</menu>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">FID</string>
+    <string name="carregando">Carregando…</string>
+    <string name="imagemLogo">Logo do FID</string>
+    <string name="digiteCPF">Digite seu CPF</string>
+    <string name="digiteSenha">Digite sua senha</string>
+    <string name="bemvindoFID">Bem Vindo</string>
+    <string name="logar">Entrar</string>
+    <string name="esqueceuSenha">Esqueceu sua senha?</string>
+    <string name="title_activity_eventos">Seus eventos</string>
+    <string name="title_home">Ativos</string>
+    <string name="title_dashboard">Próximos</string>
+    <string name="title_notifications">Vencidos</string>
+    <string name="configMenu">Configurações</string>
+    <string name="perfilMenu">Editar perfil</string>
+    <string name="deslogarMenu">Sair</string>
+    <string name="addEvento">Adicionar evento</string>
+    <string name="cadastrar">Não tem conta? Cadastre-se
+        <u>aqui</u>
+    </string>
+    <string name="title_activity_cadastro">Cadastro</string>
+    <string name="cadastrarNome">Nome</string>
+    <string name="cadastrarEmail">E-mail</string>
+    <string name="cadastrarCPF">CPF</string>
+    <string name="cadastrarSenha">Senha</string>
+    <string name="cadastrarBotao">Cadastrar-se</string>
+    <string name="cadastrarDataNasc">Data de nascimento</string>
+</resources>
