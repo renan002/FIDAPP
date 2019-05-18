@@ -1,13 +1,26 @@
 package br.com.micdev.fid2
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import android.view.View
+import android.widget.Toast
+import br.com.micdev.fid2.user.UserModel
+import br.com.micdev.fid2.user.UserResponse
+import br.com.micdev.fid2.user.UserUtils.userService
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_cadastro.*
 import kotlinx.android.synthetic.main.content_cadastro.*
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 
 class CadastroActivity : AppCompatActivity() {
+
+    private val context:Context = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,15 +38,42 @@ class CadastroActivity : AppCompatActivity() {
     }
 
     private fun cadastrar(view: View){
-        val CPF = cadastroCPF.text.toString()
-        if(Util.myValidateCPF(CPF)) {
+        var cpf = cadastroCPF.text.toString()
 
+        if(Util.myValidateCPF(cpf)) {
+            cpf = cpf.replace(".","").replace("-","")
             val nome = cadastroNome.text.toString()
             val email = cadastroEmail.text.toString()
             val senha = cadastroSenha.text.toString()
             //val dataNascString= cadastroDataNasc.text.toString()
             try {
                 //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
+                val gson = Gson()
+
+                val jsonString = gson.toJson(UserModel(cpf,email,nome,senha))
+
+                val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json"),jsonString)
+
+                val call : Call<UserResponse> = userService.registrationPost(requestBody)
+
+                call.enqueue(
+                    object : Callback<UserResponse>{
+                        override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                            Util.showSnackFeedback("Não foi F",true,view,context)
+                            Toast.makeText(context,t.message,Toast.LENGTH_LONG).show()
+                        }
+                        override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                            if(response.isSuccessful) {
+                                Util.showSnackFeedback("Foiii", true, view, context)
+                                Toast.makeText(context,response.message(),Toast.LENGTH_LONG).show()
+                            } else{
+                                Util.showSnackFeedback("Não foi",false,view,context)
+                                Toast.makeText(context,response.toString(),Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                )
+
             }catch (e:Exception){
                 //Util.showSnackFeedback(e.toString(),false,view,this)
                 //return
@@ -46,5 +86,7 @@ class CadastroActivity : AppCompatActivity() {
 
 
     }
+
+
 
 }
