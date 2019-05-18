@@ -2,12 +2,12 @@ package br.com.micdev.fid2
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import br.com.micdev.fid2.user.UserModel
 import br.com.micdev.fid2.user.UserResponse
-import br.com.micdev.fid2.user.UserUtils.userService
+import br.com.micdev.fid2.retrofit.APIUtils.userService
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_cadastro.*
 import kotlinx.android.synthetic.main.content_cadastro.*
@@ -43,19 +43,20 @@ class CadastroActivity : AppCompatActivity() {
         if(Util.myValidateCPF(cpf)) {
             cpf = cpf.replace(".","").replace("-","")
             val nome = cadastroNome.text.toString()
+            //TODO Adiconar validador de email
             val email = cadastroEmail.text.toString()
             val senha = cadastroSenha.text.toString()
             //val dataNascString= cadastroDataNasc.text.toString()
             try {
                 //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
-                val gson = Gson()
-
-                val jsonString = gson.toJson(UserModel(cpf,email,nome,senha))
+                //TODO adicionar as regras de exeções
+                val jsonString = Gson().toJson(UserModel(cpf,email,nome,senha))
 
                 val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json"),jsonString)
 
                 val call : Call<UserResponse> = userService.registrationPost(requestBody)
 
+                //TODO Usar a merda da origentação a objetos direito
                 call.enqueue(
                     object : Callback<UserResponse>{
                         override fun onFailure(call: Call<UserResponse>, t: Throwable) {

@@ -1,6 +1,5 @@
 package br.com.micdev.fid2.retrofit
 
-import br.com.micdev.fid2.user.UserUtils
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,9 +9,11 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
+    private val BASE_URL = "http://fid-api.sa-east-1.elasticbeanstalk.com/"
+
     var retrofit: Retrofit? = null
 
-    fun getClient(baseUrl: String): Retrofit? {
+    fun getClient(): Retrofit? {
 
         if (retrofit == null) {
             val interceptor = HttpLoggingInterceptor()
@@ -34,7 +35,7 @@ object RetrofitClient {
                 .readTimeout(100, TimeUnit.SECONDS)
                 .build()
             retrofit = Retrofit.Builder()
-                .baseUrl(UserUtils.BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
