@@ -10,7 +10,13 @@ class UserResponse(
 
     @Expose
     @SerializedName("message")
-    val message:String
-) {
+    val message:String,
 
-}
+    @Expose
+    @SerializedName("url")
+    val url:String,
+
+    @Expose
+    @SerializedName("protocol")
+    val protocol:String
+)

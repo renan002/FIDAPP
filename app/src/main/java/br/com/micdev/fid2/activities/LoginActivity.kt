@@ -1,8 +1,11 @@
-package br.com.micdev.fid2
+package br.com.micdev.fid2.activities
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import br.com.micdev.fid2.util.Mask
+import br.com.micdev.fid2.R
+import br.com.micdev.fid2.util.Util
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -11,20 +14,20 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        loginCPF.addTextChangedListener(Mask.mask("###.###.###-##",loginCPF))
+        loginCPF.addTextChangedListener(Mask.mask("###.###.###-##", loginCPF))
 
         logarButton.setOnClickListener {view ->
 
             if(Util.myValidateCPF(loginCPF.text.toString())){
-                val i = Intent(this,EventosActivity::class.java)
+                val i = Intent(this, EventosActivity::class.java)
                 startActivity(i)
                 finish()
             }else{
-                Util.showSnackFeedback("Digite um CPF válido",false,view,this)
+                Util.showSnackFeedback("Digite um CPF válido", false, view, this)
             }
         }
         cadastrar.setOnClickListener { view ->
-            val i = Intent(this,CadastroActivity::class.java)
+            val i = Intent(this, CadastroActivity::class.java)
             startActivity(i)
 
         }

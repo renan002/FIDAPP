@@ -1,4 +1,4 @@
-package br.com.micdev.fid2
+package br.com.micdev.fid2.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
+import br.com.micdev.fid2.R
+import br.com.micdev.fid2.util.Util
 
 class EventosActivity : AppCompatActivity() {
 
@@ -46,19 +47,19 @@ class EventosActivity : AppCompatActivity() {
         val view:ConstraintLayout = findViewById(R.id.container)
         when(item?.itemId){
             R.id.upMenu_perfil ->{
-                Util.showSnackFeedback("WIP",true,view,this)
+                Util.showSnackFeedback("WIP", true, view, this)
                 return true
             }
             R.id.upMenu_addEvento ->{
-                Util.showSnackFeedback("WIP",true,view,this)
+                Util.showSnackFeedback("WIP", true, view, this)
                 return true
             }
             R.id.upMenu_configs ->{
-                Util.showSnackFeedback("WIP",true,view,this)
+                Util.showSnackFeedback("WIP", true, view, this)
                 return true
             }
             R.id.upMenu_sair ->{
-                val i = Intent(this,LoginActivity::class.java)
+                val i = Intent(this, LoginActivity::class.java)
                 startActivity(i)
                 finish()
                 return true

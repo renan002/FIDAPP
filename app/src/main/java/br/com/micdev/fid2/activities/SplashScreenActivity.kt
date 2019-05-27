@@ -1,9 +1,10 @@
-package br.com.micdev.fid2
+package br.com.micdev.fid2.activities
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import br.com.micdev.fid2.R
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -21,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity() {
     }
     private fun irParaLogin(){
 
-        val i = Intent(this,LoginActivity::class.java)
+        val i = Intent(this, LoginActivity::class.java)
         startActivity(i)
         finish()
     }

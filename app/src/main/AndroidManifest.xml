@@ -15,20 +15,20 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".CadastroActivity"
+                android:name=".activities.CadastroActivity"
                 android:label="@string/title_activity_cadastro"
-                android:parentActivityName=".LoginActivity"
+                android:parentActivityName=".activities.LoginActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="br.com.micdev.fid2.LoginActivity"/>
+                    android:value="br.com.micdev.fid2.activities.LoginActivity"/>
         </activity>
         <activity
-                android:name=".EventosActivity"
+                android:name=".activities.EventosActivity"
                 android:label="@string/title_activity_eventos">
         </activity>
         <activity
-                android:name=".SplashScreenActivity"
+                android:name=".activities.SplashScreenActivity"
                 android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -36,7 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.LoginActivity">
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package br.com.micdev.fid2
+package br.com.micdev.fid2.util
 
 import android.content.Context
 import android.support.design.widget.Snackbar

@@ -1,11 +1,15 @@
-package br.com.micdev.fid2
+package br.com.micdev.fid2.activities
 
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import br.com.micdev.fid2.util.Mask
+import br.com.micdev.fid2.R
 import br.com.micdev.fid2.user.UserModel
+import br.com.micdev.fid2.util.Util
 import br.com.micdev.fid2.user.UserResponse
 import br.com.micdev.fid2.retrofit.APIUtils.userService
 import com.google.gson.Gson
@@ -29,8 +33,8 @@ class CadastroActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        cadastroCPF.addTextChangedListener(Mask.mask("###.###.###-##",cadastroCPF))
-        cadastroDataNasc.addTextChangedListener(Mask.mask("##/##/####",cadastroDataNasc))
+        cadastroCPF.addTextChangedListener(Mask.mask("###.###.###-##", cadastroCPF))
+        cadastroDataNasc.addTextChangedListener(Mask.mask("##/##/####", cadastroDataNasc))
 
         cadastroBotao.setOnClickListener { view ->
             cadastrar(view)
@@ -54,22 +58,27 @@ class CadastroActivity : AppCompatActivity() {
 
                 val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json"),jsonString)
 
+                Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
+
                 val call : Call<UserResponse> = userService.registrationPost(requestBody)
 
                 //TODO Usar a merda da origentação a objetos direito
                 call.enqueue(
                     object : Callback<UserResponse>{
                         override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                            Util.showSnackFeedback("Não foi F",true,view,context)
+                            Util.showSnackFeedback("Não foi F", true, view, context)
                             Toast.makeText(context,t.message,Toast.LENGTH_LONG).show()
+                            Log.e("CadastroActivity",t.message)
                         }
                         override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                             if(response.isSuccessful) {
                                 Util.showSnackFeedback("Foiii", true, view, context)
                                 Toast.makeText(context,response.message(),Toast.LENGTH_LONG).show()
+                                Log.e("CadastroActivity",response.message())
                             } else{
-                                Util.showSnackFeedback("Não foi",false,view,context)
+                                Util.showSnackFeedback("Não foi", false, view, context)
                                 Toast.makeText(context,response.toString(),Toast.LENGTH_LONG).show()
+                                Log.e("CadastroActivity",response.toString())
                             }
                         }
                     }
@@ -82,7 +91,7 @@ class CadastroActivity : AppCompatActivity() {
 
 
         }else{
-            Util.showSnackFeedback("Digite um CPF válido",false,view,this)
+            Util.showSnackFeedback("Digite um CPF válido", false, view, this)
         }
 
 

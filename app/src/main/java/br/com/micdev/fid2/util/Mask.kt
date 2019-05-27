@@ -1,4 +1,4 @@
-package br.com.micdev.fid2
+package br.com.micdev.fid2.util
 
 import android.text.Editable
 import android.text.TextWatcher
