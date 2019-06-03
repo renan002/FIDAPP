@@ -1,6 +1,7 @@
 package br.com.micdev.fid2.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -8,10 +9,10 @@ import android.view.View
 import android.widget.Toast
 import br.com.micdev.fid2.util.Mask
 import br.com.micdev.fid2.R
-import br.com.micdev.fid2.user.UserModel
 import br.com.micdev.fid2.util.Util
 import br.com.micdev.fid2.user.UserResponse
 import br.com.micdev.fid2.retrofit.APIUtils.userService
+import br.com.micdev.fid2.user.UserRequest
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_cadastro.*
 import kotlinx.android.synthetic.main.content_cadastro.*
@@ -47,56 +48,56 @@ class CadastroActivity : AppCompatActivity() {
         if(Util.myValidateCPF(cpf)) {
             cpf = cpf.replace(".","").replace("-","")
             val nome = cadastroNome.text.toString()
-            //TODO Adiconar validador de email
             val email = cadastroEmail.text.toString()
-            val senha = cadastroSenha.text.toString()
-            //val dataNascString= cadastroDataNasc.text.toString()
-            try {
-                //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
-                //TODO adicionar as regras de exeções
-                val jsonString = Gson().toJson(UserModel(cpf,email,nome,senha))
 
-                val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json"),jsonString)
+            if(Util.isEmail(email)){
+                val senha = cadastroSenha.text.toString()
+                //val dataNascString= cadastroDataNasc.text.toString()
+                try {
+                    //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
+                    //TODO adicionar as regras de exeções
+                    val jsonString = Gson().toJson(UserRequest(cpf,email,nome,senha))
 
-                Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
+                    val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString)
 
-                val call : Call<UserResponse> = userService.registrationPost(requestBody)
+                    Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
 
-                //TODO Usar a merda da origentação a objetos direito
-                call.enqueue(
-                    object : Callback<UserResponse>{
-                        override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                            Util.showSnackFeedback("Não foi F", true, view, context)
-                            Toast.makeText(context,t.message,Toast.LENGTH_LONG).show()
-                            Log.e("CadastroActivity",t.message)
-                        }
-                        override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                            if(response.isSuccessful) {
-                                Util.showSnackFeedback("Foiii", true, view, context)
-                                Toast.makeText(context,response.message(),Toast.LENGTH_LONG).show()
-                                Log.e("CadastroActivity",response.message())
-                            } else{
-                                Util.showSnackFeedback("Não foi", false, view, context)
-                                Toast.makeText(context,response.toString(),Toast.LENGTH_LONG).show()
-                                Log.e("CadastroActivity",response.toString())
+                    val call : Call<UserResponse> = userService.registrationPost(requestBody)
+
+                    //TODO Usar a merda da origentação a objetos direito
+                    call.enqueue(
+                        object : Callback<UserResponse>{
+                            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                Util.showSnackFeedback("Não foi F", false, view, context)
+                                Toast.makeText(context,t.message,Toast.LENGTH_LONG).show()
+                                Log.e("CadastroActivity",t.message)
+                                val i = Intent(context,LoginActivity::class.java)
+                                i.putExtra("cpf",cpf)
+                                startActivity(i)
+                                finish()
+                            }
+                            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                                if(response.isSuccessful) {
+                                    Util.showSnackFeedback("Cadastro realizado com sucesso", true, view, context)
+                                    Log.i("CadastroActivity",response.message())
+
+                                } else{
+                                    Util.showSnackFeedback("Não foi", false, view, context)
+                                    Toast.makeText(context,response.toString(),Toast.LENGTH_LONG).show()
+                                    Log.e("CadastroActivity",response.toString())
+                                }
                             }
                         }
-                    }
-                )
+                    )
 
-            }catch (e:Exception){
-                //Util.showSnackFeedback(e.toString(),false,view,this)
-                //return
+                }catch (e:Exception){
+                    Log.e("CadastroActivity",e.message)
+                }
+            }else{
+                Util.showSnackFeedback("Digite um e-mail válido", false, view, this)
             }
-
-
         }else{
             Util.showSnackFeedback("Digite um CPF válido", false, view, this)
         }
-
-
     }
-
-
-
 }

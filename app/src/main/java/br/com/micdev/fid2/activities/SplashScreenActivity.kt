@@ -17,7 +17,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val runnable = Runnable {
             irParaLogin()
         }
-        handler.postDelayed(runnable,5000)
+        handler.postDelayed(runnable,2000)
 
     }
     private fun irParaLogin(){

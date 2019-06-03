@@ -17,6 +17,11 @@ class Util{
 
             snackbar.show()
         }
+
+        fun isEmail(email : String): Boolean {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
+
         fun myValidateCPF(cpf : String) : Boolean{
             val cpfClean = cpf.replace(".", "").replace("-", "")
 

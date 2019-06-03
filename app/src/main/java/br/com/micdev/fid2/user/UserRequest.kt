@@ -3,7 +3,7 @@ package br.com.micdev.fid2.user
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class UserModel (
+data class UserRequest (
     @Expose
     @SerializedName("cpf")
     val cpf:String,
