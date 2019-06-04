@@ -25,4 +25,6 @@
     <string name="cadastrarSenha">Senha</string>
     <string name="cadastrarBotao">Cadastrar-se</string>
     <string name="cadastrarDataNasc">Data de nascimento</string>
+    <string name="desejaSair">Aperte novamente para sair</string>
+    <string name="usuarioInvalido">Usuário ou senha inválidos</string>
 </resources>

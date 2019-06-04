@@ -2,6 +2,7 @@ package br.com.micdev.fid2.login
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 class LoginResponse (
 
@@ -20,4 +21,4 @@ class LoginResponse (
     @Expose
     @SerializedName("userId")
     val userId:String
-)
+) : Serializable

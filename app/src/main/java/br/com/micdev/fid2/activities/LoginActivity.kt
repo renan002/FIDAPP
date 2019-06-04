@@ -4,14 +4,12 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import br.com.micdev.fid2.util.Mask
 import br.com.micdev.fid2.R
-import br.com.micdev.fid2.login.LoginRequest
-import br.com.micdev.fid2.login.LoginResponse
-import br.com.micdev.fid2.retrofit.APIUtils
+import br.com.micdev.fid2.login.*
 import br.com.micdev.fid2.retrofit.APIUtils.loginService
-import br.com.micdev.fid2.retrofit.APIUtils.userService
-import br.com.micdev.fid2.user.UserResponse
+import br.com.micdev.fid2.util.SaveSharedPreference
 import br.com.micdev.fid2.util.Util
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_login.*
@@ -20,6 +18,9 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.ObjectOutputStream
 import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
@@ -27,6 +28,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+
+
+        if (SaveSharedPreference.getLoggedStatus(applicationContext)){
+            startActivity(Intent(this,EventosActivity::class.java))
+            finish()
+        }
 
         loginCPF.addTextChangedListener(Mask.mask("###.###.###-##", loginCPF))
 
@@ -39,20 +47,18 @@ class LoginActivity : AppCompatActivity() {
         logarButton.setOnClickListener {view ->
 
             if(Util.myValidateCPF(loginCPF.text.toString())){
-                logar()
+                logar(view)
             }else{
                 Util.showSnackFeedback("Digite um CPF válido", false, view, this)
             }
         }
         cadastrar.setOnClickListener { view ->
-            val i = Intent(this, CadastroActivity::class.java)
-            startActivity(i)
-
+            startActivity(Intent(this, CadastroActivity::class.java))
         }
 
     }
 
-    private fun logar(){
+    private fun logar(view: View){
         val cpf = loginCPF.text.toString().replace("-","").replace(".","")
         val senha = loginSenha.text.toString()
 
@@ -76,15 +82,12 @@ class LoginActivity : AppCompatActivity() {
                     override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                         //TODO tratar as exceções de erro, senha incorreta, cpf não cadastrado, etc...
                         if(response.isSuccessful){
-                            Log.e("LoginActivity","Teste")
-                            val loginResponseJSON = Gson().toJson(response.body())
-                            Log.e("LoginActivity",loginResponseJSON)
-                            val i = Intent(this@LoginActivity,EventosActivity::class.java)
-                            i.putExtra("loginResponse",loginResponseJSON)
-                            startActivity(i)
+                            Log.e("LoginActivity",Gson().toJson(response.body()))
+                            armazenarLogin(response.body())
+                            startActivity(Intent(this@LoginActivity,EventosActivity::class.java))
                             finish()
                         }else{
-                            Log.e("LoginActivity",response.toString())
+                            Util.showSnackFeedback(getString(R.string.usuarioInvalido),false,view,this@LoginActivity)
                         }
                     }
                 }
@@ -92,6 +95,10 @@ class LoginActivity : AppCompatActivity() {
         }catch (e:Exception){
             Log.e("LoginActivity",e.message)
         }
+    }
+
+    private fun armazenarLogin(loginResponse: LoginResponse?){
+        SaveSharedPreference.setLoginParams(applicationContext,loginResponse)
     }
 
 }
