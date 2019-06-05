@@ -83,7 +83,7 @@ class EventosActivity : AppCompatActivity() {
                 return true
             }
             R.id.upMenu_addEvento ->{
-                Util.showSnackFeedback("WIP", true, view, this)
+                startActivity(Intent(this,AdicionarEventoActivity::class.java))
                 return true
             }
             R.id.upMenu_configs ->{

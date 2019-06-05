@@ -52,8 +52,12 @@ class LoginActivity : AppCompatActivity() {
                 Util.showSnackFeedback("Digite um CPF válido", false, view, this)
             }
         }
-        cadastrar.setOnClickListener { view ->
+        cadastrar.setOnClickListener {
             startActivity(Intent(this, CadastroActivity::class.java))
+        }
+
+        esqueceuSenha.setOnClickListener{view ->
+            Util.showSnackFeedback("Problema seu",false, view, this)
         }
 
     }

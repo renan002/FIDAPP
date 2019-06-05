@@ -8,5 +8,5 @@ import retrofit2.http.POST
 interface UserService {
 
     @POST("api/user/register")
-    fun registrationPost(@Body request: RequestBody): Call<UserResponse>
+    fun registrationPost(@Body request: RequestBody): Call<Unit>
 }

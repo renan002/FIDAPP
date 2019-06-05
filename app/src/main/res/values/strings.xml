@@ -27,4 +27,15 @@
     <string name="cadastrarDataNasc">Data de nascimento</string>
     <string name="desejaSair">Aperte novamente para sair</string>
     <string name="usuarioInvalido">Usuário ou senha inválidos</string>
+    <string name="title_activity_adicionar_evento">Adicionar um evento</string>
+    <string name="codEvent">Digite o código do evento</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="obsAdicionarEvento">Digite aqui o código do evento fornecido pelo dono do evento</string>
+    <string name="errorGeneric">Ocorreu um erro, por favor tente novamente</string>
+    <string name="eventNotFound">Evento não encontrado</string>
+    <string name="eventName">Nome do evento:</string>
+    <string name="eventDateInit">Data de início:</string>
+    <string name="eventDateEnd">Data de término:</string>
+    <string name="eventPrice">Preço:</string>
+
 </resources>

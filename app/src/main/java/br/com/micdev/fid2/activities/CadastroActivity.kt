@@ -3,6 +3,7 @@ package br.com.micdev.fid2.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -10,7 +11,6 @@ import android.widget.Toast
 import br.com.micdev.fid2.util.Mask
 import br.com.micdev.fid2.R
 import br.com.micdev.fid2.util.Util
-import br.com.micdev.fid2.user.UserResponse
 import br.com.micdev.fid2.retrofit.APIUtils.userService
 import br.com.micdev.fid2.user.UserRequest
 import com.google.gson.Gson
@@ -62,24 +62,30 @@ class CadastroActivity : AppCompatActivity() {
 
                     Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
 
-                    val call : Call<UserResponse> = userService.registrationPost(requestBody)
+                    val call : Call<Unit> = userService.registrationPost(requestBody)
 
                     //TODO Usar a merda da origentação a objetos direito
                     call.enqueue(
-                        object : Callback<UserResponse>{
-                            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                        object : Callback<Unit>{
+                            override fun onFailure(call: Call<Unit>, t: Throwable) {
                                 Util.showSnackFeedback("Não foi F", false, view, context)
                                 Toast.makeText(context,t.message,Toast.LENGTH_LONG).show()
                                 Log.e("CadastroActivity",t.message)
-                                val i = Intent(context,LoginActivity::class.java)
-                                i.putExtra("cpf",cpf)
-                                startActivity(i)
-                                finish()
+
                             }
-                            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                                 if(response.isSuccessful) {
                                     Util.showSnackFeedback("Cadastro realizado com sucesso", true, view, context)
                                     Log.i("CadastroActivity",response.message())
+                                    val handler = Handler()
+
+                                    val runnable = Runnable {
+                                        val i = Intent(context,LoginActivity::class.java)
+                                        i.putExtra("cpf",cpf)
+                                        startActivity(i)
+                                        finish()
+                                    }
+                                    handler.postDelayed(runnable,1000)
 
                                 } else{
                                     Util.showSnackFeedback("Não foi", false, view, context)
