@@ -2,73 +2,76 @@ package br.com.micdev.fid2.event
 
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class EventResponse(
     @SerializedName("content")
     val content: List<Content>,
     @SerializedName("empty")
-    val empty: Boolean, // true
+    val empty: Boolean,
     @SerializedName("first")
-    val first: Boolean, // true
+    val first: Boolean,
     @SerializedName("last")
-    val last: Boolean, // true
+    val last: Boolean,
     @SerializedName("number")
-    val number: Int, // 0
+    val number: Int,
     @SerializedName("numberOfElements")
-    val numberOfElements: Int, // 0
+    val numberOfElements: Int,
     @SerializedName("pageable")
     val pageable: Pageable,
     @SerializedName("size")
-    val size: Int, // 0
+    val size: Int,
     @SerializedName("sort")
     val sort: Sort,
     @SerializedName("totalElements")
-    val totalElements: Int, // 0
+    val totalElements: Int,
     @SerializedName("totalPages")
-    val totalPages: Int // 0
+    val totalPages: Int
 ){
-    data class Sort(
-        @SerializedName("empty")
-        val empty: Boolean, // true
-        @SerializedName("sorted")
-        val sorted: Boolean, // true
-        @SerializedName("unsorted")
-        val unsorted: Boolean // true
+    data class Content(
+        @SerializedName("endDate")
+        val endDate: Date,
+        @SerializedName("id")
+        val id: Int,
+        @SerializedName("isPublic")
+        val isPublic: Boolean,
+        @SerializedName("maxCapacity")
+        val maxCapacity: Int,
+        @SerializedName("minCapacity")
+        val minCapacity: Int,
+        @SerializedName("name")
+        val name: String,
+        @SerializedName("ownerName")
+        val ownerName: String,
+        @SerializedName("price")
+        val price: Int,
+        @SerializedName("startDate")
+        val startDate: Date,
+        @SerializedName("tokenText")
+        val tokenText: String
     )
+
     data class Pageable(
         @SerializedName("offset")
-        val offset: Int, // 0
+        val offset: Int,
         @SerializedName("pageNumber")
-        val pageNumber: Int, // 0
+        val pageNumber: Int,
         @SerializedName("pageSize")
-        val pageSize: Int, // 0
+        val pageSize: Int,
         @SerializedName("paged")
-        val paged: Boolean, // true
+        val paged: Boolean,
         @SerializedName("sort")
         val sort: Sort,
         @SerializedName("unpaged")
-        val unpaged: Boolean // true
+        val unpaged: Boolean
     )
-    data class Content(
-        @SerializedName("endDate")
-        val endDate: String, // 2019-06-04T00:45:30.294Z
-        @SerializedName("id")
-        val id: Int, // 0
-        @SerializedName("isPublic")
-        val isPublic: Boolean, // true
-        @SerializedName("maxCapacity")
-        val maxCapacity: Int, // 0
-        @SerializedName("minCapacity")
-        val minCapacity: Int, // 0
-        @SerializedName("name")
-        val name: String, // string
-        @SerializedName("ownerName")
-        val ownerName: String, // string
-        @SerializedName("price")
-        val price: Int, // 0
-        @SerializedName("startDate")
-        val startDate: String, // 2019-06-04T00:45:30.294Z
-        @SerializedName("tokenText")
-        val tokenText: String // string
+
+    data class Sort(
+        @SerializedName("empty")
+        val empty: Boolean,
+        @SerializedName("sorted")
+        val sorted: Boolean,
+        @SerializedName("unsorted")
+        val unsorted: Boolean
     )
 }

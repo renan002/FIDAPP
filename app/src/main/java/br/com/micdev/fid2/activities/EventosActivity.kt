@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
+import br.com.micdev.fid2.event.EventResponse.*
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import br.com.micdev.fid2.R
+import br.com.micdev.fid2.event.EventObject
 import br.com.micdev.fid2.event.EventResponse
+import br.com.micdev.fid2.event.EventsAdapter
 import br.com.micdev.fid2.retrofit.APIUtils.eventService
 import br.com.micdev.fid2.util.SaveSharedPreference
 import br.com.micdev.fid2.util.Util
@@ -27,35 +31,48 @@ class EventosActivity : AppCompatActivity() {
 
     private var podeSair: Boolean = false
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_ativo -> {
-                textMessage.setText(R.string.title_home)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_proximo -> {
-                textMessage.setText(R.string.title_dashboard)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_vencido -> {
-                textMessage.setText(R.string.title_notifications)
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
+    var events: ArrayList<EventObject> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eventos)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
+        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         //Obtem os eventos por integração
-        var eventResponse = obterEventos()
+        obterEventos()
+
+        Log.e("EventosActivity",Gson().toJson(events))
+
+
 
         textMessage = message
-        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+    }
 
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_ativo -> {
+                textMessage.setText(R.string.title_home)
+                recyclerViewEventos.layoutManager = LinearLayoutManager(this)
+
+                recyclerViewEventos.adapter = EventsAdapter(events, this)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_proximo -> {
+                textMessage.setText(R.string.title_dashboard)
+                recyclerViewEventos.layoutManager = LinearLayoutManager(this)
+
+                recyclerViewEventos.adapter = EventsAdapter(events, this)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_vencido -> {
+                textMessage.setText(R.string.title_notifications)
+                recyclerViewEventos.layoutManager = LinearLayoutManager(this)
+
+                recyclerViewEventos.adapter = EventsAdapter(events, this)
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -94,9 +111,7 @@ class EventosActivity : AppCompatActivity() {
         return true
     }
 
-    private fun obterEventos(): EventResponse?{
-
-        var eventResponse: EventResponse? = null
+    private fun obterEventos(){
 
         val call : Call<EventResponse> = eventService.eventGet(SaveSharedPreference.getUserToken(applicationContext)!!)
 
@@ -108,8 +123,11 @@ class EventosActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                     if (response.isSuccessful) {
-                        Log.e("EventosActivity",Gson().toJson(response.body()))
-                        eventResponse = response.body()
+                        Log.e("EventosActivitySuccess",Gson().toJson(response.body()))
+                        events = montarEventList(response.body())
+                        recyclerViewEventos.layoutManager = LinearLayoutManager(this@EventosActivity)
+
+                        recyclerViewEventos.adapter = EventsAdapter(events, this@EventosActivity)
                     }else{
                         Log.e("EventosActivity",response.message())
                     }
@@ -117,7 +135,19 @@ class EventosActivity : AppCompatActivity() {
 
             }
         )
-        return eventResponse
+    }
+
+    private fun montarEventList(eventResponse: EventResponse?):ArrayList<EventObject>{
+        val events: ArrayList<EventObject> = ArrayList()
+
+        val list:List<Content> = eventResponse!!.content
+
+        list.forEach{t ->
+            val eventObject = EventObject(t.tokenText)
+            events.add(eventObject)
+        }
+        Log.e("EventosActivityEvents",Gson().toJson(events))
+        return events
     }
 
     override fun onBackPressed() {
