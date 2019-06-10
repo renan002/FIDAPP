@@ -12,4 +12,13 @@ object PreferencesUtility {
     val USER_ID = "logged_in_id"
 
     val USER_LOGIN = "logged_in_login"
+
+    val USER_EVENTS_PAGO = "eventos_pagos"
+    val USER_EVENTS_PAGOS_DATE = "eventos_pagos_date"
+
+    var USER_EVENTS_PROPRIOS = "eventos_meus"
+    var USER_EVENTS_PROPRIOS_DATE = "eventos_meus_date"
+
+    val USER_EVENTS_NAO_PAGOS = "eventos_nao_pagos"
+    val USER_EVENTS_NAO_PAGOS_DATE = "eventos_nao_pagos_date"
 }

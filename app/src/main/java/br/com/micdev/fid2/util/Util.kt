@@ -1,12 +1,27 @@
 package br.com.micdev.fid2.util
 
 import android.content.Context
+import android.os.Build
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.View
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.*
 
 class Util{
     companion object{
+
+        val tenMinutesInMillis:Long = 600000L
+
+        val thirtyMinutesInMillis:Long = 1800000L
+
+        val oneHourInMillis:Long = 3600000L
+
+        val onDayInMillis:Long = 2678400000L
+
         fun showSnackFeedback(message : String, isValid : Boolean, view : View, context : Context){
             val snackbar : Snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
             val v : View = snackbar.view
@@ -16,6 +31,27 @@ class Util{
                 v.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_dark))
 
             snackbar.show()
+        }
+
+
+        @Suppress("NAME_SHADOWING")
+        fun formatDateTime(dateTimeToFormat: String):String{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                val dateTimeToFormat = "$dateTimeToFormat.00Z"
+                val date = Instant.parse(dateTimeToFormat)
+                val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                    .withLocale(Locale.getDefault())
+                    .withZone(ZoneId.of("GMT"))
+                return formatter.format(date)
+            }else{
+                val dateTimeToFormat = dateTimeToFormat.replace("-","").replace("T","").trim()
+                val ano = dateTimeToFormat.substring(0..3)
+                val mes = dateTimeToFormat.substring(4..5)
+                val dia = dateTimeToFormat.substring(6..7)
+                val horario = dateTimeToFormat.substring(8..12)
+
+                return "$dia/$mes/$ano - $horario"
+            }
         }
 
         fun isEmail(email : String): Boolean {
@@ -96,7 +132,7 @@ class Util{
 
             val i=cpf.length
             var j=0
-            val p=a.get(0);
+            val p=a.get(0)
 
             while(j<i){
                 val c = a.get(j)

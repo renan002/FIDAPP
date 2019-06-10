@@ -13,6 +13,10 @@ data class UserRequest (
     val email:String,
 
     @Expose
+    @SerializedName("birthDate")
+    val dataNasc:String,
+
+    @Expose
     @SerializedName("name")
     val name:String,
 

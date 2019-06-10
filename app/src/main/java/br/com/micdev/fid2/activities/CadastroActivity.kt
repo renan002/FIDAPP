@@ -31,6 +31,7 @@ class CadastroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cadastro)
         setSupportActionBar(toolbar)
+        window.statusBarColor = getColor(R.color.colorPrimaryDark)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -43,67 +44,70 @@ class CadastroActivity : AppCompatActivity() {
     }
 
     private fun cadastrar(view: View){
-        var cpf = cadastroCPF.text.toString()
+        var cpf = cadastroCPF.text.toString().trim()
 
         if(Util.myValidateCPF(cpf)) {
-            cpf = cpf.replace(".","").replace("-","")
-            val nome = cadastroNome.text.toString()
-            val email = cadastroEmail.text.toString()
+            cpf = cpf.replace(".","").replace("-","").trim()
+            val email = cadastroEmail.text.toString().trim()
 
             if(Util.isEmail(email)){
-                val senha = cadastroSenha.text.toString()
-                //val dataNascString= cadastroDataNasc.text.toString()
-                try {
-                    //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
-                    //TODO adicionar as regras de exeções
-                    val jsonString = Gson().toJson(UserRequest(cpf,email,nome,senha))
+                val senha = cadastroSenha.text.toString().trim()
+                Log.e("Senha",senha.length.toString())
+                if(senha.length in 6..30){
+                    val nome = cadastroNome.text.toString().trim()
+                    val dataNasc= cadastroDataNasc.text.toString().trim()
+                    try {
+                        //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
+                        //TODO adicionar as regras de exeções
+                        val jsonString = Gson().toJson(UserRequest(cpf,email,dataNasc,nome,senha))
+                        val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString)
+                        Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
 
-                    val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString)
+                        val call : Call<Unit> = userService.registrationPost(requestBody)
 
-                    Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
+                        //TODO Usar a merda da origentação a objetos direito
+                        call.enqueue(
+                            object : Callback<Unit>{
+                                override fun onFailure(call: Call<Unit>, t: Throwable) {
+                                    Util.showSnackFeedback(getString(R.string.errorGeneric), false, view, context)
+                                    Log.e("CadastroActivity",t.message)
 
-                    val call : Call<Unit> = userService.registrationPost(requestBody)
+                                }
+                                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                                    if(response.isSuccessful) {
+                                        Util.showSnackFeedback("Cadastro realizado com sucesso", true, view, context)
+                                        Log.i("CadastroActivity",response.message())
+                                        val handler = Handler()
 
-                    //TODO Usar a merda da origentação a objetos direito
-                    call.enqueue(
-                        object : Callback<Unit>{
-                            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                                Util.showSnackFeedback("Não foi F", false, view, context)
-                                Toast.makeText(context,t.message,Toast.LENGTH_LONG).show()
-                                Log.e("CadastroActivity",t.message)
+                                        val runnable = Runnable {
+                                            val i = Intent(context,LoginActivity::class.java)
+                                            i.putExtra("cpf",cpf)
+                                            startActivity(i)
+                                            finish()
+                                        }
+                                        handler.postDelayed(runnable,1500)
 
-                            }
-                            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                                if(response.isSuccessful) {
-                                    Util.showSnackFeedback("Cadastro realizado com sucesso", true, view, context)
-                                    Log.i("CadastroActivity",response.message())
-                                    val handler = Handler()
-
-                                    val runnable = Runnable {
-                                        val i = Intent(context,LoginActivity::class.java)
-                                        i.putExtra("cpf",cpf)
-                                        startActivity(i)
-                                        finish()
+                                    } else{
+                                        Util.showSnackFeedback(getString(R.string.errorGeneric), false, view, context)
+                                        Log.e("CadastroActivity",response.toString())
                                     }
-                                    handler.postDelayed(runnable,1000)
-
-                                } else{
-                                    Util.showSnackFeedback("Não foi", false, view, context)
-                                    Toast.makeText(context,response.toString(),Toast.LENGTH_LONG).show()
-                                    Log.e("CadastroActivity",response.toString())
                                 }
                             }
-                        }
-                    )
-
-                }catch (e:Exception){
-                    Log.e("CadastroActivity",e.message)
+                        )
+                    }catch (e:Exception){
+                        Log.e("CadastroActivity",e.message)
+                    }
+                }else{
+                    //Senha muito curta ou muito longa
+                    Util.showSnackFeedback(getString(R.string.invalidPassword),false, view,this)
                 }
             }else{
-                Util.showSnackFeedback("Digite um e-mail válido", false, view, this)
+                //Email inválido
+                Util.showSnackFeedback(getString(R.string.invalidEmail), false, view, this)
             }
         }else{
-            Util.showSnackFeedback("Digite um CPF válido", false, view, this)
+            //CPF inválido
+            Util.showSnackFeedback(getString(R.string.invalidCPF), false, view, this)
         }
     }
 }

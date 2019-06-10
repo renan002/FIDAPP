@@ -5,10 +5,17 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import br.com.micdev.fid2.login.LoginResponse
 import br.com.micdev.fid2.util.PreferencesUtility.LOGGED_IN_PREF
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_NAO_PAGOS
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_NAO_PAGOS_DATE
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PAGO
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PAGOS_DATE
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PROPRIOS
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PROPRIOS_DATE
 import br.com.micdev.fid2.util.PreferencesUtility.USER_ID
 import br.com.micdev.fid2.util.PreferencesUtility.USER_LOGIN
 import br.com.micdev.fid2.util.PreferencesUtility.USER_NAME
 import br.com.micdev.fid2.util.PreferencesUtility.USER_TOKEN
+import java.util.*
 
 
 object SaveSharedPreference {
@@ -38,6 +45,88 @@ object SaveSharedPreference {
         setUserLogin(context,loginResponse.login)
         setUserName(context,loginResponse.name)
         setUserToken(context,loginResponse.token)
+    }
+
+    /**
+     * @param context
+     * @param jsonEventosPagos
+     */
+    fun setEventosPagos(context: Context,jsonEventosPagos:String){
+        val editor = getPreferences(context).edit()
+        editor.putString(USER_EVENTS_PAGO,jsonEventosPagos)
+        editor.putLong(USER_EVENTS_PAGOS_DATE, System.currentTimeMillis())
+        editor.apply()
+    }
+
+    /**
+     * @param  context
+     * @return string: eventos pagos em json
+     */
+    fun getEventosPagos(context: Context):String?{
+        return getPreferences(context).getString(USER_EVENTS_PAGO,null)
+    }
+
+    /**
+     * @param context
+     * @return long: data da ultima chamada da lista pago
+     */
+    fun getEventosPagosDate(context: Context):Long{
+        return getPreferences(context).getLong(USER_EVENTS_PAGOS_DATE,0L)
+    }
+
+    /**
+     * @param context
+     * @param jsonEventosProprios
+     */
+    fun setEventosProprios(context: Context,jsonEventosProprios: String){
+        val editor = getPreferences(context).edit()
+        editor.putString(USER_EVENTS_PROPRIOS,jsonEventosProprios)
+        editor.putLong(USER_EVENTS_PROPRIOS_DATE, System.currentTimeMillis())
+        editor.apply()
+    }
+
+    /**
+     * @param context
+     * @return string: eventos proprios em json
+     */
+    fun getEventosProprios(context: Context):String?{
+        return getPreferences(context).getString(USER_EVENTS_PROPRIOS,null)
+    }
+
+    /**
+     * @param context
+     * @return long: data da ultima chamada da lista de proprio
+     */
+    fun getEventosPropriosDate(context: Context):Long{
+        return getPreferences(context).getLong(USER_EVENTS_PROPRIOS_DATE,0L)
+    }
+
+    /**
+     * @param context
+     * @param jsonEventosNaoPagos
+     */
+    fun setEventosNaoPagos(context: Context,jsonEventosNaoPagos:String){
+        val editor = getPreferences(context).edit()
+        editor.putString(USER_EVENTS_NAO_PAGOS,jsonEventosNaoPagos)
+        editor.putLong(USER_EVENTS_NAO_PAGOS_DATE, System.currentTimeMillis())
+        editor.apply()
+    }
+
+    /**
+     * @param context
+     * @return string: eventos nao pagos em json
+     */
+    fun getEventosNaoPagos(context: Context):String?{
+        return getPreferences(context).getString(USER_EVENTS_NAO_PAGOS,null)
+    }
+
+    /**
+     * @param context
+     * @return long: data da ultima chamada da lista de nao pagos
+     */
+
+    fun getEventosNaoPagosDate(context: Context):Long{
+        return getPreferences(context).getLong(USER_EVENTS_NAO_PAGOS_DATE,0L)
     }
 
     /**

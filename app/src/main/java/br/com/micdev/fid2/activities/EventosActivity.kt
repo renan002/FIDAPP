@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
-import br.com.micdev.fid2.event.EventResponse.*
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -16,14 +15,22 @@ import br.com.micdev.fid2.R
 import br.com.micdev.fid2.event.EventObject
 import br.com.micdev.fid2.event.EventResponse
 import br.com.micdev.fid2.event.EventsAdapter
+import br.com.micdev.fid2.invite.InviteAdapter
+import br.com.micdev.fid2.invite.InviteObject
+import br.com.micdev.fid2.invite.InviteResponseGet
 import br.com.micdev.fid2.retrofit.APIUtils.eventService
+import br.com.micdev.fid2.retrofit.APIUtils.inviteService
 import br.com.micdev.fid2.util.SaveSharedPreference
 import br.com.micdev.fid2.util.Util
+import br.com.micdev.fid2.util.Util.Companion.tenMinutesInMillis
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_eventos.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.google.gson.reflect.TypeToken
+
+
 
 class EventosActivity : AppCompatActivity() {
 
@@ -31,19 +38,33 @@ class EventosActivity : AppCompatActivity() {
 
     private var podeSair: Boolean = false
 
-    var events: ArrayList<EventObject> = ArrayList()
+    var eventsPagos: ArrayList<EventObject> = ArrayList()
+    var eventsProprios:ArrayList<EventObject> = ArrayList()
+    var eventsNaoPagos: ArrayList<InviteObject> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eventos)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
         //Obtem os eventos por integração
-        obterEventos()
+        if (System.currentTimeMillis()-tenMinutesInMillis >= SaveSharedPreference.getEventosNaoPagosDate(applicationContext)){
+            obterEventosNaoPagos()
+        }else{
+            val typeMyType = object : TypeToken<ArrayList<InviteObject>>(){}.type
+            eventsNaoPagos = Gson().fromJson(SaveSharedPreference.getEventosNaoPagos(applicationContext),typeMyType) as ArrayList<InviteObject>
+        }
 
-        Log.e("EventosActivity",Gson().toJson(events))
-
-
+        if (System.currentTimeMillis()-tenMinutesInMillis >= SaveSharedPreference.getEventosPagosDate(applicationContext)){
+            obterEventosPagos()
+        }else{
+            val typeMyType = object : TypeToken<ArrayList<EventObject>>(){}.type
+            eventsPagos = Gson().fromJson(SaveSharedPreference.getEventosPagos(applicationContext),typeMyType) as ArrayList<EventObject>
+            eventsProprios = Gson().fromJson(SaveSharedPreference.getEventosProprios(applicationContext),typeMyType) as ArrayList<EventObject>
+            recyclerViewEventos.layoutManager = LinearLayoutManager(this)
+            recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this)
+        }
 
         textMessage = message
     }
@@ -54,21 +75,21 @@ class EventosActivity : AppCompatActivity() {
                 textMessage.setText(R.string.title_home)
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
-                recyclerViewEventos.adapter = EventsAdapter(events, this)
+                recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_proximo -> {
                 textMessage.setText(R.string.title_dashboard)
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
-                recyclerViewEventos.adapter = EventsAdapter(events, this)
+                recyclerViewEventos.adapter = InviteAdapter(eventsNaoPagos, this)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_vencido -> {
                 textMessage.setText(R.string.title_notifications)
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
-                recyclerViewEventos.adapter = EventsAdapter(events, this)
+                recyclerViewEventos.adapter = EventsAdapter(eventsProprios, this)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -111,9 +132,9 @@ class EventosActivity : AppCompatActivity() {
         return true
     }
 
-    private fun obterEventos(){
+    private fun obterEventosPagos(){
 
-        val call : Call<EventResponse> = eventService.eventGet(SaveSharedPreference.getUserToken(applicationContext)!!)
+        val call : Call<EventResponse> = eventService.eventGet(SaveSharedPreference.getUserToken(applicationContext))
 
         call.enqueue(
             object: Callback<EventResponse>{
@@ -124,12 +145,40 @@ class EventosActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                     if (response.isSuccessful) {
                         Log.e("EventosActivitySuccess",Gson().toJson(response.body()))
-                        events = montarEventList(response.body())
+                        montarEventPagosList(response.body())
+
                         recyclerViewEventos.layoutManager = LinearLayoutManager(this@EventosActivity)
 
-                        recyclerViewEventos.adapter = EventsAdapter(events, this@EventosActivity)
+                        recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this@EventosActivity)
                     }else{
                         Log.e("EventosActivity",response.message())
+                    }
+                }
+            }
+        )
+    }
+
+    private fun obterEventosNaoPagos(){
+
+        val call : Call<InviteResponseGet> = inviteService.inviteGet(SaveSharedPreference.getUserToken(applicationContext)!!)
+
+        call.enqueue(
+            object : Callback<InviteResponseGet>{
+                override fun onFailure(call: Call<InviteResponseGet>, t: Throwable) {
+                    Util.showSnackFeedback(getString(R.string.errorGeneric),false,container,this@EventosActivity)
+                    Log.e("EventoActivityInviteGet",t.message,t)
+                }
+
+                override fun onResponse(call: Call<InviteResponseGet>, response: Response<InviteResponseGet>) {
+                    if (response.isSuccessful){
+                        monstarEventNaoPagosList(response.body())
+                        Log.e("EventoActivityInviteGet", Gson().toJson(eventsNaoPagos))
+                        recyclerViewEventos.layoutManager = LinearLayoutManager(this@EventosActivity)
+
+                        recyclerViewEventos.adapter = InviteAdapter(eventsNaoPagos, this@EventosActivity)
+                    }else{
+                        Util.showSnackFeedback(getString(R.string.errorGeneric),false,container,this@EventosActivity)
+                        Log.e("EventoActivityInviteGet",response.toString())
                     }
                 }
 
@@ -137,17 +186,49 @@ class EventosActivity : AppCompatActivity() {
         )
     }
 
-    private fun montarEventList(eventResponse: EventResponse?):ArrayList<EventObject>{
-        val events: ArrayList<EventObject> = ArrayList()
+    private fun monstarEventNaoPagosList(inviteResponseGet: InviteResponseGet?){
 
-        val list:List<Content> = eventResponse!!.content
-
-        list.forEach{t ->
-            val eventObject = EventObject(t.tokenText)
-            events.add(eventObject)
+        inviteResponseGet!!.content.forEach{i ->
+            val inviteObject = InviteObject(
+                i.accepted,
+                i.deleted,
+                i.eventEndDate,
+                i.eventId,
+                i.eventName,
+                i.eventPrice,
+                Util.formatDateTime(i.eventStartDate),
+                i.id,
+                i.paid
+            )
+            eventsNaoPagos.add(inviteObject)
         }
-        Log.e("EventosActivityEvents",Gson().toJson(events))
-        return events
+        SaveSharedPreference.setEventosNaoPagos(applicationContext,Gson().toJson(eventsNaoPagos))
+    }
+
+    private fun montarEventPagosList(eventResponse: EventResponse?){
+
+        eventResponse!!.content.forEach{t ->
+            val eventObject = EventObject(
+                t.endDate,
+                null,
+                t.id,
+                t.isPublic,
+                t.maxCapacity,
+                t.minCapacity,
+                t.name,
+                t.ownerName,
+                t.price,
+                Util.formatDateTime(t.startDate),
+                t.tokenText
+            )
+            if (eventObject.ownerName != SaveSharedPreference.getUserName(applicationContext) )
+                eventsPagos.add(eventObject)
+            else{
+                eventsProprios.add(eventObject)
+            }
+        }
+        SaveSharedPreference.setEventosPagos(applicationContext,Gson().toJson(eventsPagos))
+        SaveSharedPreference.setEventosProprios(applicationContext,Gson().toJson(eventsProprios))
     }
 
     override fun onBackPressed() {

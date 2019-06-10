@@ -8,9 +8,9 @@
     <string name="logar">Entrar</string>
     <string name="esqueceuSenha">Esqueceu sua senha?</string>
     <string name="title_activity_eventos">Seus eventos</string>
-    <string name="title_home">Ativos</string>
-    <string name="title_dashboard">Próximos</string>
-    <string name="title_notifications">Vencidos</string>
+    <string name="title_home">Pagos</string>
+    <string name="title_dashboard">Não pagos</string>
+    <string name="title_notifications">Meus eventos</string>
     <string name="configMenu">Configurações</string>
     <string name="perfilMenu">Editar perfil</string>
     <string name="deslogarMenu">Sair</string>
@@ -33,9 +33,15 @@
     <string name="obsAdicionarEvento">Digite aqui o código do evento fornecido pelo dono do evento</string>
     <string name="errorGeneric">Ocorreu um erro, por favor tente novamente</string>
     <string name="eventNotFound">Evento não encontrado</string>
-    <string name="eventName">Nome do evento:</string>
-    <string name="eventDateInit">Data de início:</string>
-    <string name="eventDateEnd">Data de término:</string>
-    <string name="eventPrice">Preço:</string>
+    <string name="eventName">Nome do evento: %1$s</string>
+    <string name="eventDateInit">Data de início: %1$s</string>
+    <string name="eventDateEnd">Data de término: %1$s</string>
+    <string name="eventPrice">Preço: R$ %1$s</string>
+    <string name="cancelado">Cancelado</string>
+    <string name="informaçõesEvento">Informações do evento:</string>
+    <string name="invalidEmail">Digite um e-mail válido</string>
+    <string name="invalidCPF">Digite um CPF válido</string>
+    <string name="invalidPassword">Sua senha deve conter entre 6 e 30 caracteres</string>
+    <string name="cifrao">R$ %1$s</string>
 
 </resources>

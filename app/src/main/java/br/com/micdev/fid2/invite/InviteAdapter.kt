@@ -1,4 +1,4 @@
-package br.com.micdev.fid2.event
+package br.com.micdev.fid2.invite
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -10,7 +10,7 @@ import br.com.micdev.fid2.util.Util
 import kotlinx.android.synthetic.main.list_item.view.*
 import java.util.ArrayList
 
-class EventsAdapter(val events: ArrayList<EventObject>, val context: Context) : RecyclerView.Adapter<EventsAdapter.ViewHolder>(){
+class InviteAdapter(val events: ArrayList<InviteObject>, val context: Context) : RecyclerView.Adapter<InviteAdapter.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,10 +22,9 @@ class EventsAdapter(val events: ArrayList<EventObject>, val context: Context) : 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvEventoName.text = events.get(position).name
-        holder.tvEventoPreco.text = String.format(context.getString(R.string.cifrao),events.get(position).price)
-        holder.tvEventoDataInit.text = (events.get(position).startDate)
-        holder.tvEventoOwnerName.text = events.get(position).ownerName
+        holder.tvEventoName.text = events[position].eventName
+        holder.tvEventoPreco.text = String.format(context.getString(R.string.cifrao), events[position].eventPrice)
+        holder.tvEventoDataInit.text = (events[position].eventStartDate)
     }
 
 
@@ -33,7 +32,6 @@ class EventsAdapter(val events: ArrayList<EventObject>, val context: Context) : 
         val tvEventoName = view.textViewNome
         val tvEventoPreco = view.textViewPreco
         val tvEventoDataInit = view.textViewDataInit
-        val tvEventoOwnerName = view.textViewOwnerName
         private val naoSeiPqSemUmaValNaoFuncionaEssaMerda = view.setOnClickListener{v->
             Util.showSnackFeedback(tvEventoName.text.toString(),true,v!!,v.context)
         }

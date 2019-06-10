@@ -1,10 +1,9 @@
-package br.com.micdev.fid2.event
+package br.com.micdev.fid2.invite
 
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
-data class EventResponse(
+data class InviteResponseGet(
     @SerializedName("content")
     val content: List<Content>,
     @SerializedName("empty")
@@ -29,26 +28,24 @@ data class EventResponse(
     val totalPages: Int
 ){
     data class Content(
-        @SerializedName("endDate")
-        val endDate: String,
+        @SerializedName("accepted")
+        val accepted: Boolean,
+        @SerializedName("deleted")
+        val deleted: Boolean,
+        @SerializedName("eventEndDate")
+        val eventEndDate: String,
+        @SerializedName("eventId")
+        val eventId: Int,
+        @SerializedName("eventName")
+        val eventName: String,
+        @SerializedName("eventPrice")
+        val eventPrice: Int,
+        @SerializedName("eventStartDate")
+        val eventStartDate: String,
         @SerializedName("id")
         val id: Int,
-        @SerializedName("isPublic")
-        val isPublic: Boolean,
-        @SerializedName("maxCapacity")
-        val maxCapacity: Int,
-        @SerializedName("minCapacity")
-        val minCapacity: Int,
-        @SerializedName("name")
-        val name: String,
-        @SerializedName("ownerName")
-        val ownerName: String,
-        @SerializedName("price")
-        val price: Int,
-        @SerializedName("startDate")
-        val startDate: String,
-        @SerializedName("tokenText")
-        val tokenText: String
+        @SerializedName("paid")
+        val paid: Boolean
     )
 
     data class Pageable(
