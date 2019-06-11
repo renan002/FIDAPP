@@ -20,7 +20,7 @@ import java.io.IOException
 class QRCodeUtils {
     companion object{
         val QRcodeWidth = 800
-        private val IMAGE_DIRECTORY = "/QRcodeDemonuts"
+        private val IMAGE_DIRECTORY = "/fid/qrcodes"
 
         @Throws(WriterException::class)
         fun textToImageEncode(Value: String,context: Context): Bitmap? {
