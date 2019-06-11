@@ -1,8 +1,6 @@
 package br.com.micdev.fid2.activities
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View

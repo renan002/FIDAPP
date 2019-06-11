@@ -23,6 +23,7 @@
     <string name="cadastrarEmail">E-mail</string>
     <string name="cadastrarCPF">CPF</string>
     <string name="cadastrarSenha">Senha</string>
+    <string name="cadastrarConfirmSenha">Confirme sua senha</string>
     <string name="cadastrarBotao">Cadastrar-se</string>
     <string name="cadastrarDataNasc">Data de nascimento</string>
     <string name="desejaSair">Aperte novamente para sair</string>
@@ -43,5 +44,6 @@
     <string name="invalidCPF">Digite um CPF válido</string>
     <string name="invalidPassword">Sua senha deve conter entre 6 e 30 caracteres</string>
     <string name="cifrao">R$ %1$s</string>
+    <string name="senhasDif">As senhas estão diferentes</string>
 
 </resources>

@@ -54,48 +54,66 @@ class CadastroActivity : AppCompatActivity() {
                 val senha = cadastroSenha.text.toString().trim()
                 Log.e("Senha",senha.length.toString())
                 if(senha.length in 6..30){
-                    val nome = cadastroNome.text.toString().trim()
-                    val dataNasc= cadastroDataNasc.text.toString().trim()
-                    try {
-                        //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
-                        //TODO adicionar as regras de exeções
-                        val jsonString = Gson().toJson(UserRequest(cpf,email,dataNasc,nome,senha))
-                        val requestBody : RequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString)
-                        Log.e("CadastroActivity",requestBody.contentType().toString()+" "+jsonString)
+                    val confirmSenha = cadastroConfirmSenha.text.toString()
+                    if (senha == confirmSenha) {
+                        val nome = cadastroNome.text.toString().trim()
+                        val dataNasc = cadastroDataNasc.text.toString().trim()
+                        try {
+                            //val dataNasc = Date.valueOf(cadastroDataNasc.text.toString())
+                            //TODO adicionar as regras de exeções
+                            val jsonString = Gson().toJson(UserRequest(cpf, email, dataNasc, nome, senha))
+                            val requestBody: RequestBody =
+                                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonString)
+                            Log.e("CadastroActivity", requestBody.contentType().toString() + " " + jsonString)
 
-                        val call : Call<Unit> = userService.registrationPost(requestBody)
+                            val call: Call<Unit> = userService.registrationPost(requestBody)
 
-                        //TODO Usar a merda da origentação a objetos direito
-                        call.enqueue(
-                            object : Callback<Unit>{
-                                override fun onFailure(call: Call<Unit>, t: Throwable) {
-                                    Util.showSnackFeedback(getString(R.string.errorGeneric), false, view, context)
-                                    Log.e("CadastroActivity",t.message)
-
-                                }
-                                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                                    if(response.isSuccessful) {
-                                        Util.showSnackFeedback("Cadastro realizado com sucesso", true, view, context)
-                                        Log.i("CadastroActivity",response.message())
-                                        val handler = Handler()
-
-                                        val runnable = Runnable {
-                                            val i = Intent(context,LoginActivity::class.java)
-                                            i.putExtra("cpf",cpf)
-                                            startActivity(i)
-                                            finish()
-                                        }
-                                        handler.postDelayed(runnable,1500)
-
-                                    } else{
+                            //TODO Usar a merda da origentação a objetos direito
+                            call.enqueue(
+                                object : Callback<Unit> {
+                                    override fun onFailure(call: Call<Unit>, t: Throwable) {
                                         Util.showSnackFeedback(getString(R.string.errorGeneric), false, view, context)
-                                        Log.e("CadastroActivity",response.toString())
+                                        Log.e("CadastroActivity", t.message)
+
+                                    }
+
+                                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                                        if (response.isSuccessful) {
+                                            Util.showSnackFeedback(
+                                                "Cadastro realizado com sucesso",
+                                                true,
+                                                view,
+                                                context
+                                            )
+                                            Log.i("CadastroActivity", response.message())
+                                            val handler = Handler()
+
+                                            val runnable = Runnable {
+                                                val i = Intent(context, LoginActivity::class.java)
+                                                i.putExtra("cpf", cpf)
+                                                startActivity(i)
+                                                finish()
+                                            }
+                                            handler.postDelayed(runnable, 1500)
+
+                                        } else {
+                                            Util.showSnackFeedback(
+                                                getString(R.string.errorGeneric),
+                                                false,
+                                                view,
+                                                context
+                                            )
+                                            Log.e("CadastroActivity", response.toString())
+                                        }
                                     }
                                 }
-                            }
-                        )
-                    }catch (e:Exception){
-                        Log.e("CadastroActivity",e.message)
+                            )
+                        } catch (e: Exception) {
+                            Log.e("CadastroActivity", e.message)
+                        }
+                    }else{
+                        //Senhas diferentes
+                        Util.showSnackFeedback(getString(R.string.senhasDif),false, view,this)
                     }
                 }else{
                     //Senha muito curta ou muito longa
