@@ -30,8 +30,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import com.google.gson.reflect.TypeToken
 
-
-
 class EventosActivity : AppCompatActivity() {
 
     private lateinit var textMessage: TextView
@@ -63,7 +61,7 @@ class EventosActivity : AppCompatActivity() {
             eventsPagos = Gson().fromJson(SaveSharedPreference.getEventosPagos(applicationContext),typeMyType) as ArrayList<EventObject>
             eventsProprios = Gson().fromJson(SaveSharedPreference.getEventosProprios(applicationContext),typeMyType) as ArrayList<EventObject>
             recyclerViewEventos.layoutManager = LinearLayoutManager(this)
-            recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this)
+            recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this,this)
         }
 
         textMessage = message
@@ -75,7 +73,7 @@ class EventosActivity : AppCompatActivity() {
                 textMessage.setText(R.string.title_home)
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
-                recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this)
+                recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this,this)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_proximo -> {
@@ -89,7 +87,7 @@ class EventosActivity : AppCompatActivity() {
                 textMessage.setText(R.string.title_notifications)
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
-                recyclerViewEventos.adapter = EventsAdapter(eventsProprios, this)
+                recyclerViewEventos.adapter = EventsAdapter(eventsProprios, this,this)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -149,7 +147,7 @@ class EventosActivity : AppCompatActivity() {
 
                         recyclerViewEventos.layoutManager = LinearLayoutManager(this@EventosActivity)
 
-                        recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this@EventosActivity)
+                        recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this@EventosActivity,this@EventosActivity)
                     }else{
                         Log.e("EventosActivity",response.message())
                     }

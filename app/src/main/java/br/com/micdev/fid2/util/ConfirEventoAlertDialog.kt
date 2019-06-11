@@ -24,6 +24,11 @@ class ConfirEventoAlertDialog : DialogFragment() {
         fun onCancel()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.isCancelable = false
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val view : View = activity!!.layoutInflater.inflate(R.layout.alert_dialog_confir_evento,null)
@@ -43,6 +48,11 @@ class ConfirEventoAlertDialog : DialogFragment() {
         alert.setView(view)
 
         alert.setTitle(getString(R.string.informaçõesEvento))
+        alert.setCancelable(false)
+
+        alert.setOnDismissListener{
+            (activity as(Servico)).onCancel()
+        }
 
         alert.setPositiveButton(getString(android.R.string.yes)){ _, _ ->
             (activity as(Servico)).onConfirm()

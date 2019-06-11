@@ -45,5 +45,9 @@
     <string name="invalidPassword">Sua senha deve conter entre 6 e 30 caracteres</string>
     <string name="cifrao">R$ %1$s</string>
     <string name="senhasDif">As senhas estão diferentes</string>
+    <string name="eventConfirmacao">Deseja adiciona-lo?</string>
+    <string name="qrcode">QRCode</string>
+    <string name="salvar">Salvar</string>
+    <string name="qrCodeMostre">Mostre ao atendente</string>
 
 </resources>
