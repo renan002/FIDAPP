@@ -6,14 +6,30 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
-    defaultConfig {
-        applicationId "br.com.fid.fidapp"
-        minSdkVersion 23
-        targetSdkVersion 28
-        versionCode 1
-        versionName "0.0.1 Alpha"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    def versionPropsFile = file('version.properties')
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def name = versionProps['VERSION_NAME']
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+        versionProps['VERSION_CODE'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            applicationId "br.com.fid.fidapp"
+            minSdkVersion 23
+            targetSdkVersion 28
+            versionCode code
+            versionName name
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+    }else {
+        throw new GradleException("Could not read version.properties!")
     }
+
     buildTypes {
         release {
             minifyEnabled false
