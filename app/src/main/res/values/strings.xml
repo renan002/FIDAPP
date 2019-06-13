@@ -8,9 +8,10 @@
     <string name="logar">Entrar</string>
     <string name="esqueceuSenha">Esqueceu sua senha?</string>
     <string name="title_activity_eventos">Seus eventos</string>
-    <string name="title_home">Pagos</string>
-    <string name="title_dashboard">Não pagos</string>
-    <string name="title_notifications">Meus eventos</string>
+    <string name="title_pagos">Pagos</string>
+    <string name="title_nao_pagos">Não pagos</string>
+    <string name="tvNaoPagos">Toque para pagar</string>
+    <string name="title_meus_eventos">Meus eventos</string>
     <string name="configMenu">Configurações</string>
     <string name="perfilMenu">Editar perfil</string>
     <string name="deslogarMenu">Sair</string>

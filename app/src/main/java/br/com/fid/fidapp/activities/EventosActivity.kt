@@ -70,22 +70,24 @@ class EventosActivity : AppCompatActivity() {
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_ativo -> {
-                textMessage.setText(R.string.title_home)
+            R.id.navigation_pago -> {
+                textMessage.visibility = TextView.GONE
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
                 recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this,this)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_proximo -> {
-                textMessage.setText(R.string.title_dashboard)
+            R.id.navigation_nao_pagos -> {
+                textMessage.visibility = TextView.VISIBLE
+
+                textMessage.setText(R.string.tvNaoPagos)
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
                 recyclerViewEventos.adapter = InviteAdapter(eventsNaoPagos, this)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_vencido -> {
-                textMessage.setText(R.string.title_notifications)
+            R.id.navigation_meus_eventos -> {
+                textMessage.visibility = TextView.GONE
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
 
                 recyclerViewEventos.adapter = EventsPropriosAdapter(eventsProprios, this,this)
