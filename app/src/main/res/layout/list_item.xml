@@ -1,42 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:padding="16dp" android:visibility="visible"
         android:background="@drawable/border_reclycer_view">
 
+    <ImageView
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" android:src="@drawable/logo_fid"
+            android:layout_width="86dp" android:layout_height="73dp"
+            app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/imageEvento"
+            android:contentDescription="@string/imagem_do_evento"/>
+
     <TextView
             android:id="@+id/textViewNome"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/imageEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingStart="16dp"
+            android:paddingStart="16dp" android:textColor="#000"
             android:paddingEnd="16dp"
             android:textStyle="bold"/>
     <TextView
+            app:layout_constraintTop_toBottomOf="@id/textViewNome"
+            app:layout_constraintLeft_toRightOf="@+id/imageEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingStart="16dp"
+            android:paddingStart="16dp" android:textColor="#000"
             android:paddingEnd="16dp"
             android:textStyle="bold" android:id="@+id/textViewPreco"/>
     <TextView
+            app:layout_constraintTop_toBottomOf="@id/textViewPreco"
+            app:layout_constraintLeft_toRightOf="@+id/imageEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingStart="16dp"
+            android:paddingStart="16dp" android:textColor="#000"
             android:paddingEnd="16dp"
             android:textStyle="bold" android:id="@+id/textViewDataInit"/>
     <TextView
+            app:layout_constraintTop_toBottomOf="@id/textViewDataInit"
+            app:layout_constraintLeft_toRightOf="@+id/imageEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_gravity="start" android:textColor="#000"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textStyle="bold" android:id="@+id/textViewOwnerName"/>
+    <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/favoritar" app:layout_constraintBottom_toTopOf="@id/favotitarSwitch"
+            app:layout_constraintRight_toRightOf="parent" android:textColor="#000" android:textSize="14sp"
+            android:layout_marginEnd="9dp"/>
+    <Switch
+            android:id="@+id/favotitarSwitch"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="47dp" android:layout_height="17dp"
+            android:contentDescription="a" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="18dp"/>
 
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.os.Build
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.widget.Toast
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -33,6 +34,9 @@ class Util{
             snackbar.show()
         }
 
+        fun showToastFeedbach(message: String,duration: Int,context: Context){
+            Toast.makeText(context,message,duration).show()
+        }
 
         @Suppress("NAME_SHADOWING")
         fun formatDateTime(dateTimeToFormat: String):String{

@@ -22,7 +22,9 @@ data class InviteObject(
     @SerializedName("id")
     val id: Int,
     @SerializedName("paid")
-    val paid: Boolean
+    val paid: Boolean,
+    @SerializedName("favorito")
+    var favorito:Boolean = false
 ){
     fun toJson():String{
         return Gson().toJson(this)

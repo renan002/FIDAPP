@@ -21,4 +21,7 @@ object PreferencesUtility {
 
     val USER_EVENTS_NAO_PAGOS = "eventos_nao_pagos"
     val USER_EVENTS_NAO_PAGOS_DATE = "eventos_nao_pagos_date"
+
+    val USER_EVENTS_FAVORITADOS = "events_favoritados"
+    val USER_INVITES_FAVORITADOS = "invites_favoritados"
 }

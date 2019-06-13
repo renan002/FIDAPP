@@ -10,7 +10,6 @@ import br.com.micdev.fid2.R
 import br.com.micdev.fid2.qrcode.QRCodeUtils.Companion.saveImage
 import kotlinx.android.synthetic.main.alert_dialog_qrcode.view.*
 
-
 @SuppressLint("ValidFragment")
 class QRCodeAlertDialog : DialogFragment {
     var bitmap:Bitmap? = null
@@ -21,11 +20,11 @@ class QRCodeAlertDialog : DialogFragment {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view  = activity!!.layoutInflater.inflate(R.layout.alert_dialog_qrcode,null)
-
+        view.setBackgroundResource(R.drawable.corners_alert_dialog)
         view.ivQRCode.setImageBitmap(bitmap)
 
         view.buttonSalvar.setOnClickListener{v->
-            saveImage(v, bitmap,"1")
+            //saveImage(v, bitmap,"1")
         }
 
         val alert = AlertDialog.Builder(activity)

@@ -1,5 +1,6 @@
 package br.com.micdev.fid2.event
 
+import android.app.Application
 import android.content.Context
 import br.com.micdev.fid2.util.SaveSharedPreference
 import com.google.gson.Gson
@@ -7,7 +8,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class EventObject (
+data class EventProprioObject (
     @SerializedName("endDate")
     val endDate: String,
     @SerializedName("eventCode")

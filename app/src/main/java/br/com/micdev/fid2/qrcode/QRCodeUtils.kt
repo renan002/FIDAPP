@@ -1,5 +1,6 @@
 package br.com.micdev.fid2.qrcode
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -7,7 +8,6 @@ import android.media.MediaScannerConnection
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import br.com.micdev.fid2.R
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -16,11 +16,16 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import android.content.Context.DOWNLOAD_SERVICE
+import android.support.v4.content.ContextCompat.getSystemService
+import android.app.DownloadManager
+import android.net.Uri
+import br.com.micdev.fid2.R
+
 
 class QRCodeUtils {
     companion object{
-        val QRcodeWidth = 800
-        private val IMAGE_DIRECTORY = "/fid/qrcodes"
+        private const val QRcodeWidth = 800
 
         @Throws(WriterException::class)
         fun textToImageEncode(Value: String,context: Context): Bitmap? {
@@ -63,8 +68,9 @@ class QRCodeUtils {
         fun saveImage(view: View, myBitmap: Bitmap?,eventId:String): String {
             val bytes = ByteArrayOutputStream()
             myBitmap!!.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+
             val wallpaperDirectory = File(
-                Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
             )
             // have the object build the directory structure, if needed.
 
@@ -84,6 +90,14 @@ class QRCodeUtils {
                 fo.close()
                 Log.d("TAG", "File Saved::--->" + f.absolutePath)
 
+                val uri = Uri.parse(f.path)
+
+                /*val request = DownloadManager.Request(uri)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, eventId)
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED) // to notify when download is complete
+                request.allowScanningByMediaScanner()// if you want to be available from media players
+                val manager = getSystemService(view.context,DownloadManager::class.java) as DownloadManager*/
+                //manager.enqueue(request)
                 return f.absolutePath
             } catch (e1: IOException) {
                 e1.printStackTrace()

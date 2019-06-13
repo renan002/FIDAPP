@@ -18,7 +18,7 @@ import com.google.zxing.WriterException
 import kotlinx.android.synthetic.main.list_item.view.*
 import java.util.*
 
-class EventsAdapter(var events: ArrayList<EventObject>, val context: Context ,val eventosActivity: EventosActivity) : RecyclerView.Adapter<EventsAdapter.ViewHolder>(){
+class EventsPropriosAdapter(var events: ArrayList<EventProprioObject>, val context: Context ,val eventosActivity: EventosActivity) : RecyclerView.Adapter<EventsPropriosAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false), eventosActivity)

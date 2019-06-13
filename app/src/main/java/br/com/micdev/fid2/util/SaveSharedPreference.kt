@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import br.com.micdev.fid2.login.LoginResponse
 import br.com.micdev.fid2.util.PreferencesUtility.LOGGED_IN_PREF
+import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_FAVORITADOS
 import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_NAO_PAGOS
 import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_NAO_PAGOS_DATE
 import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PAGO
@@ -12,6 +13,7 @@ import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PAGOS_DATE
 import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PROPRIOS
 import br.com.micdev.fid2.util.PreferencesUtility.USER_EVENTS_PROPRIOS_DATE
 import br.com.micdev.fid2.util.PreferencesUtility.USER_ID
+import br.com.micdev.fid2.util.PreferencesUtility.USER_INVITES_FAVORITADOS
 import br.com.micdev.fid2.util.PreferencesUtility.USER_LOGIN
 import br.com.micdev.fid2.util.PreferencesUtility.USER_NAME
 import br.com.micdev.fid2.util.PreferencesUtility.USER_TOKEN
@@ -45,6 +47,42 @@ object SaveSharedPreference {
         setUserLogin(context,loginResponse.login)
         setUserName(context,loginResponse.name)
         setUserToken(context,loginResponse.token)
+    }
+
+    /**
+     * @param context
+     * @param stringSet
+     */
+    fun setEventsFavoritos(context: Context,stringSet: MutableSet<String>){
+        val editor = getPreferences(context).edit()
+        editor.putStringSet(USER_EVENTS_FAVORITADOS,stringSet)
+        editor.apply()
+    }
+
+    /**
+     * @param context
+     * @return set de id de eventos favoritados
+     */
+    fun getEventsFavoritos(context: Context):MutableSet<String>?{
+        return getPreferences(context).getStringSet(USER_EVENTS_FAVORITADOS,null)
+    }
+
+    /**
+     * @param context
+     * @param stringSet
+     */
+    fun setInvitesFavoritos(context: Context, stringSet:MutableSet<String>){
+        val editor = getPreferences(context).edit()
+        editor.putStringSet(USER_INVITES_FAVORITADOS,stringSet)
+        editor.apply()
+    }
+
+    /**
+     * @param context
+     * @return set de id de inivites favoritados
+     */
+    fun getInvitesFavoritos(context: Context):MutableSet<String>?{
+        return getPreferences(context).getStringSet(USER_INVITES_FAVORITADOS,null)
     }
 
     /**
