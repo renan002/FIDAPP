@@ -35,3 +35,12 @@ data class EventProprioObject (
         return Gson().toJson(this)
     }
 }
+class CompareEventProprioObject:Comparator<EventProprioObject>{
+    override fun compare(o1: EventProprioObject, o2: EventProprioObject): Int {
+        val fav1 = o1.favoritado
+        val fav2 = o2.favoritado
+
+        //Log.e("Compare",fav1.toString()+fav2.toString())
+        return fav2.compareTo(fav1)
+    }
+}

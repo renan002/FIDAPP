@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import br.com.fid.fidapp.R
 import br.com.fid.fidapp.event.*
+import br.com.fid.fidapp.event.EventObject
 import br.com.fid.fidapp.invite.InviteAdapter
 import br.com.fid.fidapp.invite.InviteObject
 import br.com.fid.fidapp.invite.InviteResponseGet
@@ -28,6 +29,8 @@ import kotlinx.android.synthetic.main.activity_eventos.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EventosActivity : AppCompatActivity() {
 
@@ -68,6 +71,14 @@ class EventosActivity : AppCompatActivity() {
         textMessage = message
     }
 
+    fun teste(){
+        val runnable = Runnable {
+            recyclerViewEventos.adapter?.notifyDataSetChanged()
+        }
+        Handler().postDelayed(runnable,0)
+    }
+
+
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_pago -> {
@@ -89,7 +100,6 @@ class EventosActivity : AppCompatActivity() {
             R.id.navigation_meus_eventos -> {
                 textMessage.visibility = TextView.GONE
                 recyclerViewEventos.layoutManager = LinearLayoutManager(this)
-
                 recyclerViewEventos.adapter = EventsPropriosAdapter(eventsProprios, this,this)
                 return@OnNavigationItemSelectedListener true
             }
@@ -244,9 +254,9 @@ class EventosActivity : AppCompatActivity() {
                 )
                 eventsProprios.add(eventProprioObject)
             }
-
-
         }
+        Collections.sort(eventsPagos,CompareEventObject())
+        Collections.sort(eventsProprios,CompareEventProprioObject())
         SaveSharedPreference.setEventosPagos(applicationContext,Gson().toJson(eventsPagos))
         SaveSharedPreference.setEventosProprios(applicationContext,Gson().toJson(eventsProprios))
     }
