@@ -1,5 +1,6 @@
 package br.com.fid.fidapp.event
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -33,5 +34,17 @@ data class EventObject (
 
     fun toJson(): String{
         return Gson().toJson(this)
+    }
+
+
+}
+
+class CompareEventObject:Comparator<EventObject>{
+    override fun compare(o1: EventObject, o2: EventObject): Int {
+        val fav1 = o1.favoritado
+        val fav2 = o2.favoritado
+
+        Log.e("Compare",fav1.toString()+fav2.toString())
+        return fav1.compareTo(fav2)
     }
 }

@@ -8,6 +8,8 @@ import android.util.ArraySet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Switch
+import android.widget.TextView
 import br.com.fid.fidapp.R
 import br.com.fid.fidapp.activities.EventosActivity
 import br.com.fid.fidapp.qrcode.QRCodeAlertDialog
@@ -34,11 +36,11 @@ class EventsPropriosAdapter(var events: ArrayList<EventProprioObject>, val conte
         holder.tvEventoDataInit.text = (events[position].startDate)
         holder.tvEventoOwnerName.text = events[position].ownerName
         holder.token = events[position].tokenText!!
+        holder.event = events[position]
         holder.switch.isChecked = events[position].favoritado
         holder.switch.setOnCheckedChangeListener { view, isChecked ->
             events[position].favoritado = isChecked
             val appContext = view.context.applicationContext
-
             var listId: MutableSet<String>? = SaveSharedPreference.getEventsFavoritos(appContext)
             if (listId != null) {
                 if (listId.contains(events[position].id.toString())) {
@@ -54,18 +56,22 @@ class EventsPropriosAdapter(var events: ArrayList<EventProprioObject>, val conte
                 listId.add(events[position].id.toString())
                 SaveSharedPreference.setEventsFavoritos(appContext, listId)
             }
+            Collections.sort(events,CompareEventProprioObject())
+            eventosActivity.teste()
         }
     }
 
     class ViewHolder (view: View,activity: EventosActivity): RecyclerView.ViewHolder(view) {
-        val tvEventoName = view.textViewNome
-        val tvEventoPreco = view.textViewPreco
-        val tvEventoDataInit = view.textViewDataInit
-        val tvEventoOwnerName = view.textViewOwnerName
-        val switch = view.favotitarSwitch
+        val tvEventoName:TextView = view.textViewNome
+        val tvEventoPreco: TextView = view.textViewPreco
+        val tvEventoDataInit:TextView = view.textViewDataInit
+        val tvEventoOwnerName:TextView = view.textViewOwnerName
+        val switch:Switch = view.favotitarSwitch
         lateinit var token:String
-        val context = view.context
-        internal var bitmap: Bitmap? = null
+        val context:Context = view.context
+        private var bitmap: Bitmap? = null
+        lateinit var event:EventProprioObject
+
         private val naoSeiPqSemUmaValNaoFuncionaEssaMerda = view.setOnClickListener{
             val manager:FragmentManager = activity.supportFragmentManager
             try {
@@ -74,6 +80,7 @@ class EventsPropriosAdapter(var events: ArrayList<EventProprioObject>, val conte
                 e.printStackTrace()
             }
         }
+
         private val naoSeiPqSemUmaValNaoFuncionaEssaMerda2 = view.setOnLongClickListener{v->
             Util.showSnackFeedback(tvEventoPreco.text.toString(),true,v,v.context)
 
@@ -85,10 +92,5 @@ class EventsPropriosAdapter(var events: ArrayList<EventProprioObject>, val conte
             val qrCodeAlertDialog = QRCodeAlertDialog(bitmap!!)
             qrCodeAlertDialog.show(fragmentManager,"AlertDialogQRCode")
         }
-
-
-
     }
-
-
 }

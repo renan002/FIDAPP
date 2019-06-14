@@ -20,6 +20,10 @@ import java.util.*
 
 class EventsAdapter(var events: ArrayList<EventObject>, val context: Context, val eventosActivity: EventosActivity) : RecyclerView.Adapter<EventsAdapter.ViewHolder>(){
 
+    init {
+        Collections.sort(events,CompareEventObject())
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false), eventosActivity)
     }
