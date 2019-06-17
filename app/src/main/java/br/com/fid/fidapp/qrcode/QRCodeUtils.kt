@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.media.MediaScannerConnection
 import android.os.Environment
 import android.util.Log
-import android.view.View
 import br.com.fid.fidapp.R
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -22,7 +21,7 @@ class QRCodeUtils {
         private const val QRcodeWidth = 800
 
         @Throws(WriterException::class)
-        fun textToImageEncode(Value: String,context: Context): Bitmap? {
+        fun textToImageEncode(Value: String,context: Context,eventId: String): Bitmap? {
             val bitMatrix: BitMatrix
             try {
                 bitMatrix = MultiFormatWriter().encode(
@@ -56,15 +55,16 @@ class QRCodeUtils {
             val bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444)
 
             bitmap.setPixels(pixels, 0, 800, 0, 0, bitMatrixWidth, bitMatrixHeight)
+            saveImage(context,bitmap,eventId)
             return bitmap
         }
 
-        fun saveImage(view: View, myBitmap: Bitmap?,eventId:String): String {
+        private fun saveImage(context: Context, myBitmap: Bitmap?, eventId:String): String {
             val bytes = ByteArrayOutputStream()
-            myBitmap!!.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+            myBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, bytes)
 
             val wallpaperDirectory = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+                Environment.getExternalStorageDirectory().toString()+"/fid/qrcodes"
             )
             // have the object build the directory structure, if needed.
 
@@ -74,13 +74,13 @@ class QRCodeUtils {
             }
 
             try {
-                val f = File(wallpaperDirectory, "$eventId.jpg")
+                val f = File(wallpaperDirectory, "$eventId.png")
                 f.createNewFile()   //give read write permission
                 val fo = FileOutputStream(f)
                 fo.write(bytes.toByteArray())
-                MediaScannerConnection.scanFile(view.context,
+                MediaScannerConnection.scanFile(context,
                     arrayOf(f.path),
-                    arrayOf("image/jpeg"), null)
+                    arrayOf("image/png"), null)
                 fo.close()
                 Log.d("TAG", "File Saved::--->" + f.absolutePath)
 

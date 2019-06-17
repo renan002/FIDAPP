@@ -50,7 +50,8 @@
     <string name="qrcode">QRCode</string>
     <string name="salvar">Salvar</string>
     <string name="qrCodeMostre">Mostre ao atendente</string>
-    <string name="favoritar">Favoritar</string>
+    <string name="favoritar">Favorito</string>
     <string name="imagem_do_evento">Imagem do evento</string>
+    <string name="digite_cod_evento">Digite um código do evento</string>
 
 </resources>

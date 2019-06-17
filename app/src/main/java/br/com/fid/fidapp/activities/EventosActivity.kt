@@ -1,10 +1,14 @@
 package br.com.fid.fidapp.activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -50,6 +54,8 @@ class EventosActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
+        pedirPermissao()
+
         //Obtem os eventos por integração
         if (System.currentTimeMillis()-tenMinutesInMillis >= SaveSharedPreference.getEventosNaoPagosDate(applicationContext)){
             obterEventosNaoPagos()
@@ -75,7 +81,7 @@ class EventosActivity : AppCompatActivity() {
         val runnable = Runnable {
             recyclerViewEventos.adapter?.notifyDataSetChanged()
         }
-        Handler().postDelayed(runnable,0)
+        Handler().postDelayed(runnable,500)
     }
 
 
@@ -259,6 +265,39 @@ class EventosActivity : AppCompatActivity() {
         Collections.sort(eventsProprios,CompareEventProprioObject())
         SaveSharedPreference.setEventosPagos(applicationContext,Gson().toJson(eventsPagos))
         SaveSharedPreference.setEventosProprios(applicationContext,Gson().toJson(eventsProprios))
+    }
+
+    fun pedirPermissao(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+                 ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            1)
+        }
+    }
+
+    var qtt = 0
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+        1-> {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                qtt++
+                if(qtt<=10)
+                    pedirPermissao()
+            }
+            return
+        }
+
+        // other 'case' lines to check for other
+        // permissions this app might request
+        }
     }
 
     override fun onBackPressed() {

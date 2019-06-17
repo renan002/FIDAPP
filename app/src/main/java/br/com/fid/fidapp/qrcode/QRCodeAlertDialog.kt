@@ -22,10 +22,6 @@ class QRCodeAlertDialog : DialogFragment {
         view.setBackgroundResource(R.drawable.corners_alert_dialog)
         view.ivQRCode.setImageBitmap(bitmap)
 
-        view.buttonSalvar.setOnClickListener{v->
-            //saveImage(v, bitmap,"1")
-        }
-
         val alert = AlertDialog.Builder(activity)
         alert.setView(view)
         alert.setTitle(getString(R.string.qrCodeMostre))
