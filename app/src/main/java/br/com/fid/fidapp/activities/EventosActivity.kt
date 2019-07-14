@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
@@ -34,7 +33,6 @@ import kotlinx.android.synthetic.main.activity_eventos.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -59,20 +57,19 @@ class EventosActivity : AppCompatActivity() {
         pedirPermissao()
 
         //Obtem os eventos por integração
-        if (System.currentTimeMillis() - tenMinutesInMillis >= SaveSharedPreference.getEventosNaoPagosDate(applicationContext)){
+        if (System.currentTimeMillis()-tenMinutesInMillis >= SaveSharedPreference.getEventosNaoPagosDate(applicationContext)){
             obterEventosNaoPagos()
         }else{
             val typeMyType = object : TypeToken<ArrayList<InviteObject>>(){}.type
             eventsNaoPagos = Gson().fromJson(SaveSharedPreference.getEventosNaoPagos(applicationContext),typeMyType) as ArrayList<InviteObject>
         }
 
-        if (System.currentTimeMillis() - tenMinutesInMillis >= SaveSharedPreference.getEventosPagosDate(applicationContext)){
+        if (System.currentTimeMillis() >= SaveSharedPreference.getEventosPagosDate(applicationContext)){
             obterEventosPagos()
         }else{
             val typeMyType = object : TypeToken<ArrayList<EventObject>>(){}.type
-            val typeMyTypeProprio = object : TypeToken<ArrayList<EventProprioObject>>(){}.type
             eventsPagos = Gson().fromJson(SaveSharedPreference.getEventosPagos(applicationContext),typeMyType) as ArrayList<EventObject>
-            eventsProprios = Gson().fromJson(SaveSharedPreference.getEventosProprios(applicationContext),typeMyTypeProprio) as ArrayList<EventProprioObject>
+            eventsProprios = Gson().fromJson(SaveSharedPreference.getEventosProprios(applicationContext),typeMyType) as ArrayList<EventProprioObject>
             recyclerViewEventos.layoutManager = LinearLayoutManager(this)
             recyclerViewEventos.adapter = EventsAdapter(eventsPagos, this,this)
         }
@@ -119,10 +116,6 @@ class EventosActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val view:ConstraintLayout = findViewById(R.id.container)
         when(item?.itemId){
-            R.id.upMenu_autenticador ->{
-                Util.showSnackFeedback("Coming soon",true,view,this)
-                return true
-            }
             R.id.upMenu_perfil ->{
                 Util.showSnackFeedback("WIP", true, view, this)
                 return true
@@ -147,13 +140,6 @@ class EventosActivity : AppCompatActivity() {
     }
 
     private fun logout(){
-        val dir = File(Environment.getExternalStorageDirectory().toString()+"/fid/qrcodes")
-        if (dir.isDirectory){
-            val files = dir.list()
-            files.forEach { file->
-                File(dir,file).delete()
-            }
-        }
         SaveSharedPreference.logout(applicationContext)
     }
 
@@ -270,8 +256,7 @@ class EventosActivity : AppCompatActivity() {
                     t.ownerName,
                     t.price,
                     Util.formatDateTime(t.startDate),
-                    t.tokenText,
-                    fav
+                    t.tokenText, fav
                 )
                 eventsProprios.add(eventProprioObject)
             }
@@ -293,20 +278,25 @@ class EventosActivity : AppCompatActivity() {
         }
     }
 
-    private var qtt = 0
+    var qtt = 0
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
-            1-> {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        1-> {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                } else {
-                    qtt++
-                    if(qtt<=10)
-                        pedirPermissao()
-                }
+            } else {
+                qtt++
+                if(qtt<=10)
+                    pedirPermissao()
             }
+            return
+        }
+
+        // other 'case' lines to check for other
+        // permissions this app might request
         }
     }
 

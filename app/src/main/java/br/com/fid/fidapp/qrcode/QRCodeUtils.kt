@@ -18,7 +18,7 @@ import java.io.IOException
 
 class QRCodeUtils {
     companion object{
-        private const val QRcodeWidth = 650
+        private const val QRcodeWidth = 800
 
         @Throws(WriterException::class)
         fun textToImageEncode(Value: String,context: Context,eventId: String): Bitmap? {
@@ -54,7 +54,7 @@ class QRCodeUtils {
             }
             val bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444)
 
-            bitmap.setPixels(pixels, 0, 650, 0, 0, bitMatrixWidth, bitMatrixHeight)
+            bitmap.setPixels(pixels, 0, 800, 0, 0, bitMatrixWidth, bitMatrixHeight)
             saveImage(context,bitmap,eventId)
             return bitmap
         }

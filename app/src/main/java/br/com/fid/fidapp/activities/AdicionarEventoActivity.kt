@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ProgressBar
 import br.com.fid.fidapp.R
 import br.com.fid.fidapp.event.EventObject
 import br.com.fid.fidapp.retrofit.APIUtils
@@ -25,7 +24,6 @@ class AdicionarEventoActivity : AppCompatActivity(), ConfirEventoAlertDialog.Ser
 
     override fun onCancel() {
         Util.showSnackFeedback(getString(R.string.cancelado),false,layoutAddEvent,this@AdicionarEventoActivity)
-        progressBarAdicionarEvento.visibility = ProgressBar.GONE
     }
 
     override fun onConfirm() {
@@ -42,7 +40,6 @@ class AdicionarEventoActivity : AppCompatActivity(), ConfirEventoAlertDialog.Ser
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         buttonAdicionarEvento.setOnClickListener { view ->
-            progressBarAdicionarEvento.visibility = ProgressBar.VISIBLE
             val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(buttonAdicionarEvento.windowToken, 0)
             val codEvento:String = editTextCodEvento.text.toString()
@@ -61,7 +58,6 @@ class AdicionarEventoActivity : AppCompatActivity(), ConfirEventoAlertDialog.Ser
                 override fun onFailure(call: Call<EventObject>, t: Throwable) {
                     Util.showSnackFeedback(getString(R.string.errorGeneric),false,view,this@AdicionarEventoActivity)
                     Log.e("AdicionarEventoAct",t.message)
-                    progressBarAdicionarEvento.visibility = ProgressBar.GONE
                 }
 
                 override fun onResponse(call: Call<EventObject>, response: Response<EventObject>) {
@@ -72,11 +68,9 @@ class AdicionarEventoActivity : AppCompatActivity(), ConfirEventoAlertDialog.Ser
                         val confirEventoAlertDialog = ConfirEventoAlertDialog()
                         confirEventoAlertDialog.arguments = bundle
                         confirEventoAlertDialog.show(supportFragmentManager,"AlertDialogEvento")
-                        progressBarAdicionarEvento.visibility = ProgressBar.GONE
                     }else{
                         Util.showSnackFeedback(getString(R.string.eventNotFound),false,view,this@AdicionarEventoActivity)
                         Log.e("AdicionarEventoAct",response.toString())
-                        progressBarAdicionarEvento.visibility = ProgressBar.GONE
                     }
                 }
             }
@@ -84,7 +78,6 @@ class AdicionarEventoActivity : AppCompatActivity(), ConfirEventoAlertDialog.Ser
     }
 
     private fun adicionarEvento(view: View){
-        progressBarAdicionarEvento.visibility = ProgressBar.VISIBLE
         val codEvento:String = editTextCodEvento.text.toString()
         val call: Call<Unit> = APIUtils.inviteService.invitePost(SaveSharedPreference.getUserToken(applicationContext)!!,codEvento)
 
@@ -93,19 +86,16 @@ class AdicionarEventoActivity : AppCompatActivity(), ConfirEventoAlertDialog.Ser
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
                     Util.showSnackFeedback(getString(R.string.errorGeneric),false,view,this@AdicionarEventoActivity)
                     Log.e("AdicionarEventoAct",t.message)
-                    progressBarAdicionarEvento.visibility = ProgressBar.GONE
                 }
 
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if(response.isSuccessful){
                         Log.i("AdicionarEventoAct", Gson().toJson(response.body()))
                         Util.showSnackFeedback("Evento adicionado, aguardando pagamento",true,view,this@AdicionarEventoActivity)
-                        progressBarAdicionarEvento.visibility = ProgressBar.GONE
-
+                        //popularFormEvento(response.body())
                     }else{
                         Util.showSnackFeedback(getString(R.string.eventNotFound),false,view,this@AdicionarEventoActivity)
                         Log.e("AdicionarEventoAct",response.toString())
-                        progressBarAdicionarEvento.visibility = ProgressBar.GONE
                     }
                 }
 

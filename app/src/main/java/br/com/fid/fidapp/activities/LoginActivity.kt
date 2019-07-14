@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import br.com.fid.fidapp.R
 import br.com.fid.fidapp.login.LoginRequest
 import br.com.fid.fidapp.login.LoginResponse
@@ -43,8 +42,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         logarButton.setOnClickListener {view ->
+
             if(Util.myValidateCPF(loginCPF.text.toString())){
-                progressBarLogin.visibility = ProgressBar.VISIBLE
                 logar(view)
             }else{
                 Util.showSnackFeedback("Digite um CPF válido", false, view, this)
@@ -61,7 +60,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun logar(view: View){
-
         val cpf = loginCPF.text.toString().replace("-","").replace(".","")
         val senha = loginSenha.text.toString()
 
@@ -80,18 +78,16 @@ class LoginActivity : AppCompatActivity() {
                 object : Callback<LoginResponse>{
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Log.e("LoginActivity","Erro ao logar: "+t.message)
-                        progressBarLogin.visibility = ProgressBar.GONE
+
                     }
 
                     override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                         if(response.isSuccessful){
-                            progressBarLogin.visibility = ProgressBar.GONE
                             Log.e("LoginActivity",Gson().toJson(response.body()))
                             armazenarLogin(response.body())
                             startActivity(Intent(this@LoginActivity, EventosActivity::class.java))
                             finish()
                         }else{
-                            progressBarLogin.visibility = ProgressBar.GONE
                             Util.showSnackFeedback(getString(R.string.usuarioInvalido),false,view,this@LoginActivity)
                         }
                     }
@@ -99,7 +95,6 @@ class LoginActivity : AppCompatActivity() {
             )
         }catch (e:Exception){
             Log.e("LoginActivity",e.message)
-            progressBarLogin.visibility = ProgressBar.GONE
         }
     }
 
